@@ -14,7 +14,11 @@ const app = express();
 MongoDB();
 
 // Middleware
-app.use(cors()); // Enable CORS for all origins
+app.use(cors({
+  origin: 'https://to-do-application-frontend-5fhpilz3r-ashugupta1s-projects.vercel.app/',
+  methods: 'GET, POST, PUT, DELETE',
+  credentials: true
+})); // Enable CORS for all origins
 app.use(bodyParser.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
