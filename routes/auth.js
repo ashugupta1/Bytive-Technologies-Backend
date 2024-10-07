@@ -8,8 +8,6 @@ const router = express.Router();
 //SignUp Route
 router.post("/signup", async (req, res) => {
   const { username, email, password } = req.body;
-  console.log(username+" "+ email+" "+password );
-  
 
   try {
     // Check if user already exists
@@ -20,7 +18,6 @@ router.post("/signup", async (req, res) => {
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("Hashed password for signup:", hashedPassword);
 
     // Create user
     user = new User({
@@ -49,7 +46,6 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      console.log("User not found");
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
@@ -58,8 +54,7 @@ router.post("/login", async (req, res) => {
     if (!isMatch) {
       console.log(password);
       console.log(user.password);
-      
-      
+
       console.log("Password not matched");
       return res.status(400).json({ message: "Invalid credentials" });
     }
