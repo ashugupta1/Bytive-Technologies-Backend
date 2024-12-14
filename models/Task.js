@@ -13,8 +13,8 @@ const taskSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["completed", "incomplete"],
-      default: "incomplete",
+      enum: ["completed", "pending", "in-progress"],
+      default: "pending",
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

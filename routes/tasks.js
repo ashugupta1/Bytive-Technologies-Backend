@@ -11,7 +11,7 @@ router.post("/", authMiddleware, async (req, res) => {
     const task = new Task({
       title,
       description,
-      createdBy: req.user.id, // Assuming req.user is set by auth middleware
+      createdBy: req.user.id,
     });
     await task.save();
     return res.status(201).json(task);
@@ -23,24 +23,32 @@ router.post("/", authMiddleware, async (req, res) => {
 
 // Update Task Route
 router.put("/:id", authMiddleware, async (req, res) => {
-  const { status } = req.body; // Assuming only status is being updated
+  const { title, description, status } = req.body;
   try {
-    const task = await Task.findByIdAndUpdate(
+    // Find the task by ID and update the fields
+    const updateTask = await Task.findByIdAndUpdate(
       req.params.id,
-      { status },
+      {
+        title,        // Update title
+        description,  // Update description
+        status,       // Update status
+      },
       { new: true } // Return the updated task
     );
 
-    if (!task) {
+    // If task not found, return 404
+    if (!updateTask) {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    return res.status(200).json(task);
+    // Return the updated task
+    return res.status(200).json(updateTask);
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "Server error" });
   }
 });
+
 
 // Delete Task Route
 router.delete("/:id", authMiddleware, async (req, res) => {
@@ -69,6 +77,24 @@ router.get("/", authMiddleware, async (req, res) => {
       "username email"
     );
     return res.status(200).json(tasks);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+//get a single task by id
+router.get("/:id", authMiddleware, async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    const task = await Task.findById(taskId).populate(
+      "createdBy",
+      "username email"
+    );
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    return res.status(200).json(task);
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "Server error" });
