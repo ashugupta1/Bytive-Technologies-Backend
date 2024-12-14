@@ -1,4 +1,3 @@
-// routes/tasks.js
 const express = require("express");
 const Task = require("../models/Task");
 const authMiddleware = require("../middlewares/auth");
@@ -25,15 +24,14 @@ router.post("/", authMiddleware, async (req, res) => {
 router.put("/:id", authMiddleware, async (req, res) => {
   const { title, description, status } = req.body;
   try {
-    // Find the task by ID and update the fields
     const updateTask = await Task.findByIdAndUpdate(
       req.params.id,
       {
-        title,        // Update title
-        description,  // Update description
-        status,       // Update status
+        title,        
+        description, 
+        status,       
       },
-      { new: true } // Return the updated task
+      { new: true } 
     );
 
     // If task not found, return 404
@@ -41,7 +39,6 @@ router.put("/:id", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    // Return the updated task
     return res.status(200).json(updateTask);
   } catch (err) {
     console.error(err);
@@ -71,7 +68,6 @@ router.delete("/:id", authMiddleware, async (req, res) => {
 // Get All Tasks Route
 router.get("/", authMiddleware, async (req, res) => {
   try {
-    // Find tasks created by the logged-in user and populate 'createdBy' field
     const tasks = await Task.find({ createdBy: req.user.id }).populate(
       "createdBy",
       "username email"
