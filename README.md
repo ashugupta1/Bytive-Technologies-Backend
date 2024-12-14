@@ -28,7 +28,7 @@ Follow these steps to set up the project locally:
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/ashugupta1/Bytive-Technologies-Backend.git
    ```
 
 2. **Navigate to the project directory**:
@@ -45,8 +45,8 @@ Follow these steps to set up the project locally:
    Create a `.env` file in the project root and configure the following:
    ```plaintext
    PORT=5000
-   MONGO_URI=<your-mongodb-uri>
-   JWT_SECRET=<your-jwt-secret>
+   MONGO_URI = 'mongodb://localhost:27017/to_do_app'
+   JWT_SECRET = 'My_Secret_key',
    ```
 
 5. **Start the server**:
@@ -58,84 +58,175 @@ Follow these steps to set up the project locally:
 
 ## API Endpoints
 
-| Method | Endpoint             | Description              |
+| Method | Endpoint                  |      Description         |
 |--------|-----------------------|--------------------------|
-| POST   | `/login`              | Authenticate user        |
-| POST   | `/tasks`              | Create a new task        |
-| GET    | `/tasks`              | Fetch all tasks          |
-| GET    | `/tasks/:id`          | Fetch a specific task    |
-| PUT    | `/tasks/:id`          | Update a specific task   |
-| DELETE | `/tasks/:id`          | Delete a specific task   |
+| POST   | `/api/signup`             | Signup and generate token|
+| POST   | `/api/login`              | Authenticate user        |
+| POST   | `/api/tasks`              | Create a new task        |
+| GET    | `/api/tasks`              | Fetch all tasks          |
+| GET    | `/api/tasks/:id`          | Fetch a specific task    |
+| PUT    | `/api/tasks/:id`          | Update a specific task   |
+| DELETE | `/api/tasks/:id`          | Delete a specific task   |
 
 ---
 
-## Example Usage
+## Usage Instructions
 
-### **Create a Task**
+### Authentication
 
-**Request**:
-```http
-POST /tasks
-```
-**Headers**:
+**Signup**:
+
+Send a POST request to `/api/signup` with the following example data:
+
+**Request Body**:
 ```json
 {
-  "Content-Type": "application/json",
-  "x-auth-token": "<JWT Token>"
+    "username": "ashu5361",
+    "email": "ashu@gmail.com",
+    "password": "123456"
 }
 ```
-**Body**:
-```json
-{
-  "title": "Sample Task",
-  "description": "This is a sample task",
-  "status": "Pending"
-}
-```
-
 **Response**:
 ```json
 {
-  "_id": "1234567890",
-  "title": "Sample Task",
-  "description": "This is a sample task",
-  "status": "Pending",
-  "createdAt": "2024-12-14T00:00:00.000Z",
-  "updatedAt": "2024-12-14T00:00:00.000Z"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWQzYjQ2MjQ2OTUzODIzZDlhYmI3MiIsImlhdCI6MTczNDE2MzI3MCwiZXhwIjoxNzM0MTY2ODcwfQ.3vEZL0oSaa73cIZmyZ75VY4xXyg2PuxP3AjHPJuta10"
 }
 ```
 
-### **Update a Task**
+Use the token generated in the response for authentication in subsequent requests. 
 
-**Request**:
-```http
-PUT /tasks/:id
-```
+---
+
+### Create a Task
+
+**Endpoint**: `/api/tasks`  
+**Method**: POST  
 **Headers**:
 ```json
 {
-  "Content-Type": "application/json",
-  "x-auth-token": "<JWT Token>"
+  "x-auth-token": "<your-token>",
+  "Content-Type": "application/json"
 }
 ```
-**Body**:
+**Request Body**:
 ```json
 {
-  "title": "Updated Task Title",
-  "description": "Updated Task Description",
-  "status": "Completed"
+    "title": "Team Meeting Preparation",
+    "description": "Prepare an agenda for the upcoming team meeting, including topics to discuss, time allocations, and desired outcomes.",
+    "status": "Pending"
 }
 ```
-
 **Response**:
 ```json
 {
-  "_id": "1234567890",
-  "title": "Updated Task Title",
-  "description": "Updated Task Description",
-  "status": "Completed",
-  "createdAt": "2024-12-14T00:00:00.000Z",
-  "updatedAt": "2024-12-14T01:00:00.000Z"
+    "_id": "1234567890",
+    "title": "Team Meeting Preparation",
+    "description": "Prepare an agenda for the upcoming team meeting, including topics to discuss, time allocations, and desired outcomes.",
+    "status": "Pending",
+    "createdAt": "2024-12-14T00:00:00.000Z",
+    "updatedAt": "2024-12-14T00:00:00.000Z"
+}
+```
+
+---
+
+### Fetch All Tasks
+
+**Endpoint**: `/api/tasks`  
+**Method**: GET  
+**Headers**:
+```json
+{
+  "x-auth-token": "<your-token>"
+}
+```
+**Response**:
+```json
+[
+  {
+    "_id": "1234567890",
+    "title": "Team Meeting Preparation",
+    "description": "Prepare an agenda for the upcoming team meeting, including topics to discuss, time allocations, and desired outcomes.",
+    "status": "Pending",
+    "createdAt": "2024-12-14T00:00:00.000Z",
+    "updatedAt": "2024-12-14T00:00:00.000Z"
+  }
+]
+```
+
+---
+
+### Fetch a Specific Task
+
+**Endpoint**: `/api/tasks/:id`  
+**Method**: GET  
+**Headers**:
+```json
+{
+  "x-auth-token": "<your-token>"
+}
+```
+**Response**:
+```json
+{
+    "_id": "1234567890",
+    "title": "Team Meeting Preparation",
+    "description": "Prepare an agenda for the upcoming team meeting, including topics to discuss, time allocations, and desired outcomes.",
+    "status": "Pending",
+    "createdAt": "2024-12-14T00:00:00.000Z",
+    "updatedAt": "2024-12-14T00:00:00.000Z"
+}
+```
+
+---
+
+### Update a Task
+
+**Endpoint**: `/api/tasks/:id`  
+**Method**: PUT  
+**Headers**:
+```json
+{
+  "x-auth-token": "<your-token>",
+  "Content-Type": "application/json"
+}
+```
+**Request Body**:
+```json
+{
+    "title": "Updated Task Title",
+    "description": "Updated Task Description",
+    "status": "Completed"
+}
+```
+**Response**:
+```json
+{
+    "_id": "1234567890",
+    "title": "Updated Task Title",
+    "description": "Updated Task Description",
+    "status": "Completed",
+    "createdAt": "2024-12-14T00:00:00.000Z",
+    "updatedAt": "2024-12-14T01:00:00.000Z"
+}
+```
+
+---
+
+### Delete a Task
+
+**Endpoint**: `/api/tasks/:id`  
+**Method**: DELETE  
+**Headers**:
+```json
+{
+  "x-auth-token": "<your-token>"
+}
+```
+**Response**:
+```json
+{
+    "message": "Task deleted successfully"
 }
 ```
 
